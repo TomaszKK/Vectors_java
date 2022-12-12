@@ -13,12 +13,12 @@ public class TestVector{
                 MyVector sum = MyVector.addVectors(vectors);
                 MyVector.printVect(sum);
                 scanner.close();
+                MyVector.writeToFile(sum);
                 correctVectors = true;
             } catch (DifferentVectorsLengthsException e) {
-                String comparison = e.getVectorLength1() > e.getVectorLength2() ? "bigger" : "smaller";
-                System.out.println("Vector " + e.getIndxvalue1() + " lenght is equal " + e.getVectorLength1());
-                System.out.println("Vector " + e.getIndxvalue2() + " lenght is equal " + e.getVectorLength2());
-                System.out.println("The vector " + e.getIndxvalue1() + " is " + comparison + " than vector" + e.getIndxvalue2());
+                System.out.println(e.getMessage());
+                System.out.println("The lenght of vectors are: " + e.getSize());
+
             
                 vectors = MyVector.enterInput(scanner, args);
             }

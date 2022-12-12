@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -40,13 +43,13 @@ public class MyVector{
     }
 
     private static MyVector enterVector(Scanner sc, int vectorIndex){
-        System.out.println("Enter vector " + vectorIndex + 1 + ": ");
+        System.out.println("Enter vector " + vectorIndex + ": ");
         String vectorString = sc.next();
         MyVector vector = new MyVector(vectorString, vectorIndex);
         return vector;
     }
 
-    public ArrayList<Integer> convertVectorStringValues(String [] inputString){
+    private ArrayList<Integer> convertVectorStringValues(String [] inputString){
         ArrayList<Integer> vectorBuilder = new ArrayList<Integer>(); 
         for(String eachValue:inputString){
             try{
@@ -70,25 +73,52 @@ public class MyVector{
     }
 
     private static void checkVectorsLengths(ArrayList<MyVector> vectors) throws DifferentVectorsLengthsException{
-        for (int i = 1; i < vectors.size(); i++) {
-            if(vectors.get(i).vect.size() != vectors.get(i - 1).vect.size()){
-                throw new DifferentVectorsLengthsException("Invalid size of vectors", i-1, vectors.get(i-1).vect.size(), i, vectors.get(i).vect.size());
+        ArrayList <Integer> data = new ArrayList<Integer>();
+        boolean correctVectors = true;
+        for (int i = 0; i < vectors.size() - 1; i++) {
+            if(vectors.get(i).vect.size() != vectors.get(i + 1).vect.size()){
+                correctVectors = false;
+                break;
             }
+        }
+
+        if( !correctVectors ){
+            for (int i = 0; i < vectors.size(); i++) {
+                data.add(vectors.get(i).vect.size());
+            }
+            throw new DifferentVectorsLengthsException("Valid size of vector", data);
         }
     }    
 
     public static void printVect(MyVector vector){
         System.out.println("The sum of the vectors is: ");
-        String vectorString = "[";
-        int i = 0;
-        for (; i < vector.getLength() - 1; i++) {
-            vectorString += (vector.vect.get(i) + ", ");
-        }
-        vectorString += (vector.vect.get(i) + "]\n");
+        String vectorString = vector.makeString();
         System.out.println(vectorString);
     }
 
     private int getLength(){
         return this.vect.size();
+    }
+
+    private String makeString(){
+        String vectorString = "[";
+        int i = 0;
+        for (; i < this.getLength() - 1; i++) {
+            vectorString += (this.vect.get(i) + ", ");
+        }
+        vectorString += (this.vect.get(i) + "]\n");
+        return vectorString;
+    }
+
+    public static void writeToFile(MyVector vector){
+        File file = new File("output.txt");
+        try {
+            FileWriter writer = new FileWriter(file);
+            String vectorString = vector.makeString();
+            writer.write(vectorString);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
