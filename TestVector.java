@@ -5,7 +5,7 @@ public class TestVector{
     public static void  main(String[] args){
         Scanner scanner = new Scanner(System.in);
         ArrayList<MyVector> vectors = new ArrayList<MyVector>();
-        vectors = MyVector.enterInput(scanner);
+        vectors = MyVector.enterInput(scanner, args);
         
         boolean correctVectors = false;
         while(!correctVectors){
@@ -15,10 +15,12 @@ public class TestVector{
                 scanner.close();
                 correctVectors = true;
             } catch (DifferentVectorsLengthsException e) {
-                System.out.println(e.getMessage());
-                System.out.println("The " + e.getDataException()[1] + " vector length is " + e.getDataException()[0]);
-                System.out.println("The " + e.getDataException()[1] + " vector length is " + e.getDataException()[3] + " than the " + e.getDataException()[2] + " vector length");
-                vectors = MyVector.enterInput(scanner);
+                String comparison = e.getVectorLength1() > e.getVectorLength2() ? "bigger" : "smaller";
+                System.out.println("Vector " + e.getIndxvalue1() + " lenght is equal " + e.getVectorLength1());
+                System.out.println("Vector " + e.getIndxvalue2() + " lenght is equal " + e.getVectorLength2());
+                System.out.println("The vector " + e.getIndxvalue1() + " is " + comparison + " than vector" + e.getIndxvalue2());
+            
+                vectors = MyVector.enterInput(scanner, args);
             }
         }
         

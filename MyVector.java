@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MyVector{
@@ -17,10 +16,10 @@ public class MyVector{
         }
     }
 
-    public static ArrayList<MyVector> enterInput(Scanner scanner){
+    public static ArrayList<MyVector> enterInput(Scanner scanner, String[] args){
         
         ArrayList<MyVector> vectors = new ArrayList<MyVector>();
-        int numberofVectors = enterNumberofVetors(scanner);
+        int numberofVectors = enterNumberofVetors(args);
         for(int i = 0; i < numberofVectors; i++){
             vectors.add(enterVector(scanner, i)); 
         }
@@ -28,24 +27,20 @@ public class MyVector{
         return vectors;
     }
 
-    private static int enterNumberofVetors(Scanner sc){
-        System.out.println("Enter the number of vectors you want to enter: ");
-        boolean valid = false;
+    private static int enterNumberofVetors(String[] args){
         int numberofVectors = 0;
-        while(!valid){
-            try{
-                numberofVectors = sc.nextInt();
-                valid = true;
-            } catch(InputMismatchException e){
-                System.out.println("Please enter a valid number");
-                sc.nextLine();
-            }
-        }          
+        try{
+            numberofVectors = Integer.parseInt(args[0]);
+            return numberofVectors;
+        }catch(NumberFormatException e){
+            System.out.println("The first argument must be an integer");
+            System.exit(0);
+        }
         return numberofVectors;
     }
 
     private static MyVector enterVector(Scanner sc, int vectorIndex){
-        System.out.println("Enter vector " + vectorIndex + ": ");
+        System.out.println("Enter vector " + vectorIndex + 1 + ": ");
         String vectorString = sc.next();
         MyVector vector = new MyVector(vectorString, vectorIndex);
         return vector;
@@ -77,7 +72,7 @@ public class MyVector{
     private static void checkVectorsLengths(ArrayList<MyVector> vectors) throws DifferentVectorsLengthsException{
         for (int i = 1; i < vectors.size(); i++) {
             if(vectors.get(i).vect.size() != vectors.get(i - 1).vect.size()){
-                throw new DifferentVectorsLengthsException("The vectors have different lengths", dataforException(vectors.get(i - 1), vectors.get(i), i));
+                throw new DifferentVectorsLengthsException("Invalid size of vectors", i-1, vectors.get(i-1).vect.size(), i, vectors.get(i).vect.size());
             }
         }
     }    
@@ -95,14 +90,5 @@ public class MyVector{
 
     private int getLength(){
         return this.vect.size();
-    }
-
-    private static String[] dataforException(MyVector vector1, MyVector vector2, int index){ 
-        String[] data = new String[4];
-        data[0] = Integer.toString(vector1.getLength());
-        data[1] = Integer.toString(index - 1);
-        data[2] = Integer.toString(index);
-        data[3] = (vector1.getLength() > vector2.getLength()) ? "greater" : "smaller";
-        return data;
     }
 }
